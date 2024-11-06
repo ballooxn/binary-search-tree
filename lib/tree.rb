@@ -130,5 +130,9 @@ class Tree
   end
 
   def rebalance
+    nodes = level_order_iterative
+    nodes.uniq! unless nodes.length == 1
+    nodes.sort!
+    build_tree(nodes)
   end
 end
