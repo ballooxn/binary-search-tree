@@ -21,9 +21,7 @@ class Tree
   end
 
   def insert(value, current_node = @root)
-    return Node.new(value) if current_node.nil?
-
-    return Node.new(value) if current_node.data == value
+    return Node.new(value) if current_node.nil? || current_node.data == value
 
     if value > current_node.data
       current_node.right = insert(value, current_node.right)
@@ -77,20 +75,19 @@ class Tree
   def level_order_iterative
     return if @root.nil?
 
-    arr = []
-
+    nodes = []
     queue = []
 
     queue.push(@root)
 
     until queue.empty?
       curr = queue[0]
-      block_given? ? (yield curr.data) : arr << curr.data
+      block_given? ? (yield curr.data) : nodes << curr.data
       queue.push(curr.left) unless curr.left.nil?
       queue.push(curr.right) unless curr.right.nil?
       queue.shift
     end
-    block_given? ? nil : arr
+    block_given? ? nil : nodes
   end
 
   def preorder(curr = @root, &block)
@@ -120,13 +117,39 @@ class Tree
     curr
   end
 
-  def height(node)
+  def height(curr)
+    return -1 if curr.nil?
+
+    [height(curr.left), height(curr.right)].max + 1
   end
 
-  def depth(node)
+  def depth(value, curr = @root)
+    return nil if curr.nil?
+
+    curr_depth = 0
+
+    until curr.data == value
+      if value < curr.data
+        curr = curr.left
+      elsif value > curr.data
+        curr = curr.right
+      else
+        curr
+      end
+      curr_depth += 1
+    end
+    curr_depth
   end
 
-  def balanced?
+  def balanced?(height, curr = @root)
+    return -1 if curr.nil?
+
+    left_height = balanced?(height, curr.left)
+    right_height = balanced?(height, curr.right)
+
+    return false if left_height.nil? || right_height.nil? || (left_height - right_height).abs > 1
+
+    [left_height, right_height].max + 1
   end
 
   def rebalance

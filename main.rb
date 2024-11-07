@@ -1,18 +1,8 @@
 require_relative "lib/tree"
 
-tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+tree = Tree.new((Array.new(15) { rand(1..100) }))
 
 p tree.pretty_print
-
-tree.insert(345)
-
-p tree.pretty_print
-
-tree.delete(8)
-
-p tree.pretty_print
-
-p tree.find(10)
 
 # tree.level_order_iterative { |v| p v }
 puts "Preorder: \n"
