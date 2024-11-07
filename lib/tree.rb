@@ -141,21 +141,26 @@ class Tree
     curr_depth
   end
 
-  def balanced?(height, curr = @root)
+  def check_balance(height = 0, curr = @root)
     return -1 if curr.nil?
 
     left_height = balanced?(height, curr.left)
     right_height = balanced?(height, curr.right)
 
-    return false if left_height.nil? || right_height.nil? || (left_height - right_height).abs > 1
+    return false if left_height == false || right_height == false || (left_height - right_height).abs > 1
 
     [left_height, right_height].max + 1
+  end
+
+  def balanced?
+    height = balanced?
+    height != false
   end
 
   def rebalance
     nodes = level_order_iterative
     nodes.uniq! unless nodes.length == 1
     nodes.sort!
-    build_tree(nodes)
+    @root = build_tree(nodes)
   end
 end
